@@ -1,0 +1,72 @@
+// 2025/04/29
+// Discord腳本 - 部分範例
+// By Windy
+
+let debug = false;
+let count = 0;
+
+// event      - 事件
+// content - 輸入內容
+function onMessageReceived(event, content) {
+
+    let character = cm.getOnlineCharacter();
+    let accountId = cm.getBindingAccountId();
+
+    if (debug) {
+        cm.sendPrivateMessage("[onMessageReceived]");
+        cm.sendPrivateMessage(content);
+        let contentArray = content.split(" ");
+        for (let i = 0; i < contentArray.length; i++) {
+            cm.sendPrivateMessage(i + ". " + contentArray[i]);
+        }
+    }
+
+    cm.sendPrivateMessage("目前綁定帳號編號: " + (accountId === -1 ? "未綁定" : accountId) + " 線上角色: " + (character != null ? character.getName() : "不在線上或是未綁定"),
+        cm.createDangerButton("Danger-Reload", "重新載入腳本列表"),
+        cm.createPrimaryButton("Primary", "主要按鈕"),
+        cm.createSecondaryButton("Secondary", "次要按鈕"),
+        cm.createSuccessButton("Success", "成功按鈕"),
+        // cm.createSuccessButton("Dispose", "結束訊息")
+    )
+}
+
+// event      - 事件
+// buttonId   - 按鈕辨識用名稱
+// buttonText - 按鈕外部名稱
+// event.deferReply().queue(); // 長時間先回應思考
+// event.reply("回應按鈕訊息!").queue(); // 回應按鈕訊息
+function onButtonInteraction(event, buttonId, buttonText) {
+
+    // event.getMessage().delete().queue(); // 刪除按鈕行訊息
+
+    if (debug) {
+        cm.sendPrivateMessage("[onButtonInteraction] buttonId: " + buttonId + " buttonText: " + buttonText);
+    }
+
+    count++;
+    if (buttonId.equals("Danger-Reload")) {
+        event.reply("重新載入腳本完成，對話結束").queue();
+        cm.reloadScriptList();
+    } else if (buttonId.equals("Primary")) {
+        event.reply("主要類型按鈕，對話結束").queue();
+    } else if (buttonId.equals("Secondary")) {
+        event.reply("次要類型按鈕，對話結束").queue();
+    } else if (buttonId.equals("Success")) {
+        event.reply("成功類型按鈕，對話結束").queue();
+    } else if (buttonId.equals("Dispose")) {
+        event.reply("清除訊息完成，對話結束").queue();
+        cm.clearMessage(count); // 盡量不要使用
+    }
+    cm.dispose();
+}
+
+// event      - 事件
+// menuId     - 選單辨識用名稱
+// selectedId - 選單選項辨識用名稱
+function onStringSelectInteraction(event, menuId, selectedId){
+}
+
+// event      - 事件
+// modalId    - Modal辨識用名稱
+function onModalInteraction(event, modalId) {
+}
